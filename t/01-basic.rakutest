@@ -1,0 +1,6 @@
+use Test;
+use NJK;
+
+pass "replace me";
+
+done-testing;
