@@ -14,6 +14,7 @@
   "provides": {
     "NJK": "lib/NJK.rakumod",
     "NJK::AST": "lib/NJK/AST.rakumod",
+    "NJK::AST::Block": "lib/NJK/AST/Block.rakumod",
     "NJK::AST::DeclareVar": "lib/NJK/AST/DeclareVar.rakumod",
     "NJK::AST::Filter": "lib/NJK/AST/Filter.rakumod",
     "NJK::AST::For": "lib/NJK/AST/For.rakumod",
@@ -30,10 +31,12 @@
     "NJK::AST::UseVariable": "lib/NJK/AST/UseVariable.rakumod",
     "NJK::AST::Value": "lib/NJK/AST/Value.rakumod",
     "NJK::Actions": "lib/NJK/Actions.rakumod",
+    "NJK::Actions::Block": "lib/NJK/Actions/Block.rakumod",
     "NJK::Actions::For": "lib/NJK/Actions/For.rakumod",
     "NJK::Actions::If": "lib/NJK/Actions/If.rakumod",
     "NJK::Actions::Variables": "lib/NJK/Actions/Variables.rakumod",
     "NJK::Grammar": "lib/NJK/Grammar.rakumod",
+    "NJK::Grammar::Block": "lib/NJK/Grammar/Block.rakumod",
     "NJK::Grammar::For": "lib/NJK/Grammar/For.rakumod",
     "NJK::Grammar::If": "lib/NJK/Grammar/If.rakumod",
     "NJK::Grammar::Variables": "lib/NJK/Grammar/Variables.rakumod"

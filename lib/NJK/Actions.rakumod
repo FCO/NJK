@@ -11,11 +11,13 @@ use NJK::AST::Unit;
 use NJK::Actions::Variables;
 use NJK::Actions::If;
 use NJK::Actions::For;
+use NJK::Actions::Block;
 
 unit class NJK::Actions;
 also does NJK::Actions::Variables;
 also does NJK::Actions::If;
 also does NJK::Actions::For;
+also does NJK::Actions::Block;
 
 method TOP($/) {
   make NJK::AST::Unit.new: parts => @<part>».made

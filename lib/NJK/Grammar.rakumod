@@ -1,10 +1,12 @@
 use NJK::Grammar::If;
 use NJK::Grammar::For;
+use NJK::Grammar::Block;
 use NJK::Grammar::Variables;
 
 unit grammar NJK::Grammar;
 also does NJK::Grammar::If;
 also does NJK::Grammar::For;
+also does NJK::Grammar::Block;
 also does NJK::Grammar::Variables;
 
 rule TOP {
