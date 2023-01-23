@@ -15,6 +15,7 @@
     "NJK": "lib/NJK.rakumod",
     "NJK::AST": "lib/NJK/AST.rakumod",
     "NJK::AST::DeclareVar": "lib/NJK/AST/DeclareVar.rakumod",
+    "NJK::AST::Filter": "lib/NJK/AST/Filter.rakumod",
     "NJK::AST::For": "lib/NJK/AST/For.rakumod",
     "NJK::AST::HTML": "lib/NJK/AST/HTML.rakumod",
     "NJK::AST::HTMLTagBody": "lib/NJK/AST/HTMLTagBody.rakumod",

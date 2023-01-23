@@ -18,7 +18,11 @@ rule part {
 }
 
 rule value {
-  '{{' ~ '}}' <logic>
+  '{{' ~ '}}' [ <logic> ['|' <filter>]* ]
+}
+
+rule filter {
+  $<name>=\w+ [ "(" ~ ")" [ <param=.logic>* %% ',' ] ]?
 }
 
 proto rule logic {*}

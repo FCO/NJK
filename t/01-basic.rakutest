@@ -12,6 +12,7 @@ use NJK::AST::LogicQuoted;
 use NJK::AST::LogicInfixOp;
 use NJK::AST::If;
 use NJK::AST::For;
+use NJK::AST::Filter;
 
 my @tests = [
   Q||                          => NJK::AST::Unit.new,
@@ -22,6 +23,8 @@ my @tests = [
   Q|<a>bla</a>|                => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagBody.new: tag-name => "a",   :body[NJK::AST::HTMLText.new: value => "bla"]]),
   Q|<a href='bla'>ble</a>|     => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagBody.new: tag-name => "a",   :params{ :href<bla> }, :body[NJK::AST::HTMLText.new: value => "ble"]]),
   Q|{{ 1 }}|                   => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicNumeric.new: value => 1]),
+  Q<{{ 1 | filter }}>          => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicNumeric.new(value => 1), filters => [NJK::AST::Filter.new(name => "filter", params => Array[NJK::AST::Logic].new())]]),
+  Q<{{ 1 | f1 | f2(1,"a") }}>  => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicNumeric.new(value => 1), filters => [NJK::AST::Filter.new(name => "f1", params => Array[NJK::AST::Logic].new()), NJK::AST::Filter.new(name => "f2", params => [NJK::AST::LogicNumeric.new(value => 1), NJK::AST::LogicQuoted.new: value => "a", :double])]]),
   Q|{{ 'a' }}|                 => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicQuoted.new: value => "a"]),
   Q|{{ "a" }}|                 => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicQuoted.new: value => "a", :double]),
   Q|{{ 1 + 2 }}|               => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicInfixOp.new: :left(NJK::AST::LogicNumeric.new: value => 1), :right(NJK::AST::LogicNumeric.new: value => 2), :op<+>]),

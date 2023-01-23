@@ -5,6 +5,7 @@ use NJK::AST::HTMLTagVoid;
 use NJK::AST::HTMLTagBody;
 use NJK::AST::HTMLText;
 use NJK::AST::Value;
+use NJK::AST::Filter;
 use NJK::AST::Unit;
 
 use NJK::Actions::Variables;
@@ -27,7 +28,7 @@ method part($/) {
 }
 
 method value($/) {
-   make NJK::AST::Value.new: value => $<logic>.made
+  make NJK::AST::Value.new: value => $<logic>.made, filters => $<filter>.map: { NJK::AST::Filter.new: :name(~.<name>), :params[.<param>».made] }
 }
 
 method logic:sym<op1>($/)   { make NJK::AST::LogicInfixOp.new: left => $<logic-basic>.made, op => $<logic-op1>.made, right => $<logic>.made }
