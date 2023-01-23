@@ -1,6 +1,7 @@
 use NJK::AST::LogicInfixOp;
 use NJK::AST::LogicNumeric;
 use NJK::AST::LogicQuoted;
+use NJK::AST::LogicFuncCall;
 use NJK::AST::HTMLTagVoid;
 use NJK::AST::HTMLTagBody;
 use NJK::AST::HTMLText;
@@ -46,6 +47,7 @@ method logic-op2:sym<->($/) { make ~$<sym> }
 method logic-basic:sym<num>($/)    { make NJK::AST::LogicNumeric.new: value => +$/ }
 method logic-basic:sym<quote>($/)  { make NJK::AST::LogicQuoted.new: value => ~$<value> }
 method logic-basic:sym<dquote>($/) { make NJK::AST::LogicQuoted.new: value => ~$<value>, :double }
+method logic-basic:sym<func>($/)   { make NJK::AST::LogicFuncCall.new: name => ~$<name>, params => $<param>».made }
 
 # proto rule statement {*}
 

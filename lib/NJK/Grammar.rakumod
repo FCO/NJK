@@ -45,6 +45,7 @@ proto rule logic-basic {*}
       rule logic-basic:sym<num>    { <[+-]>? \d+[.\d+]? }
       rule logic-basic:sym<quote>  { "'" ~ "'" $<value>=<-[']>+ } # TODO: Fix
       rule logic-basic:sym<dquote> { '"' ~ '"' $<value>=<-["]>+ } # TODO: Fix
+      rule logic-basic:sym<func>   { $<name>=\w+["(" ~ ")" [ <param=.logic>* % ',' ]] }
 
 proto rule statement {*}
 

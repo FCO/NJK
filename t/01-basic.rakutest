@@ -42,6 +42,9 @@ my @tests = [
   Q|{% for i in items %}bla{% else %}ble{% endfor %}| => NJK::AST::Unit.new(parts => Array[NJK::AST].new(NJK::AST::For.new(iterating => Array[NJK::AST].new(NJK::AST::DeclareVar.new(name => "i ")), iterator => NJK::AST::UseVariable.new(name => "items "), block => Array[NJK::AST].new(NJK::AST::HTMLText.new(value => "bla")), else => Array[NJK::AST].new(NJK::AST::HTMLText.new(value => "ble"))))),
 
   Q|{% block test %}bla{% endblock %}| => NJK::AST::Unit.new(parts => [NJK::AST::Block.new(name => "test", block => [NJK::AST::HTMLText.new(value => "bla")], else => Array[NJK::AST].new(NJK::AST))]),
+
+  Q|{{ super() }}| => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicFuncCall.new: name => "super"]),
+  Q|{{ func(1, 2, "c") }}| => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicFuncCall.new: name => "func", params => [NJK::AST::LogicNumeric.new(value => 1), NJK::AST::LogicNumeric.new(value => 2), NJK::AST::LogicQuoted.new(value => "c", :double)]]),
 ];
 
 for @tests -> (:$key, :$value) {
