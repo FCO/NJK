@@ -12,11 +12,34 @@
   "name": "NJK",
   "perl": "6.d",
   "provides": {
-    "NJK": "lib/NJK.rakumod"
+    "NJK": "lib/NJK.rakumod",
+    "NJK::AST": "lib/NJK/AST.rakumod",
+    "NJK::AST::DeclareVar": "lib/NJK/AST/DeclareVar.rakumod",
+    "NJK::AST::For": "lib/NJK/AST/For.rakumod",
+    "NJK::AST::HTML": "lib/NJK/AST/HTML.rakumod",
+    "NJK::AST::HTMLTagBody": "lib/NJK/AST/HTMLTagBody.rakumod",
+    "NJK::AST::HTMLTagVoid": "lib/NJK/AST/HTMLTagVoid.rakumod",
+    "NJK::AST::HTMLText": "lib/NJK/AST/HTMLText.rakumod",
+    "NJK::AST::If": "lib/NJK/AST/If.rakumod",
+    "NJK::AST::Logic": "lib/NJK/AST/Logic.rakumod",
+    "NJK::AST::LogicInfixOp": "lib/NJK/AST/LogicInfixOp.rakumod",
+    "NJK::AST::LogicNumeric": "lib/NJK/AST/LogicNumeric.rakumod",
+    "NJK::AST::LogicQuoted": "lib/NJK/AST/LogicQuoted.rakumod",
+    "NJK::AST::Unit": "lib/NJK/AST/Unit.rakumod",
+    "NJK::AST::UseVariable": "lib/NJK/AST/UseVariable.rakumod",
+    "NJK::AST::Value": "lib/NJK/AST/Value.rakumod",
+    "NJK::Actions": "lib/NJK/Actions.rakumod",
+    "NJK::Actions::For": "lib/NJK/Actions/For.rakumod",
+    "NJK::Actions::If": "lib/NJK/Actions/If.rakumod",
+    "NJK::Actions::Variables": "lib/NJK/Actions/Variables.rakumod",
+    "NJK::Grammar": "lib/NJK/Grammar.rakumod",
+    "NJK::Grammar::For": "lib/NJK/Grammar/For.rakumod",
+    "NJK::Grammar::If": "lib/NJK/Grammar/If.rakumod",
+    "NJK::Grammar::Variables": "lib/NJK/Grammar/Variables.rakumod"
   },
   "resources": [
   ],
-  "source-url": "",
+  "source-url": "https://github.com/FCO/NJK.git",
   "tags": [
   ],
   "test-depends": [

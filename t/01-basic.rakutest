@@ -1,6 +1,48 @@
 use Test;
-use NJK;
+use NJK::AST;
+use NJK::Grammar;
+use NJK::Actions;
+use NJK::AST::Unit;
+use NJK::AST::HTMLText;
+use NJK::AST::HTMLTagVoid;
+use NJK::AST::HTMLTagBody;
+use NJK::AST::Value;
+use NJK::AST::LogicNumeric;
+use NJK::AST::LogicQuoted;
+use NJK::AST::LogicInfixOp;
+use NJK::AST::If;
+use NJK::AST::For;
 
-pass "replace me";
+my @tests = [
+  Q||                          => NJK::AST::Unit.new,
+  Q|bla|                       => NJK::AST::Unit.new(parts => [NJK::AST::HTMLText.new: value => "bla"]),
+  Q|<br>|                      => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagVoid.new: tag-name => "br"]),
+  Q|<img src='bla'>|           => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagVoid.new: tag-name => "img", :params{ :src<bla> }]),
+  Q|<img src='bla' alt='ble'>| => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagVoid.new: tag-name => "img", :params{ :src<bla>, :alt<ble> }]),
+  Q|<a>bla</a>|                => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagBody.new: tag-name => "a",   :body[NJK::AST::HTMLText.new: value => "bla"]]),
+  Q|<a href='bla'>ble</a>|     => NJK::AST::Unit.new(parts => [NJK::AST::HTMLTagBody.new: tag-name => "a",   :params{ :href<bla> }, :body[NJK::AST::HTMLText.new: value => "ble"]]),
+  Q|{{ 1 }}|                   => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicNumeric.new: value => 1]),
+  Q|{{ 'a' }}|                 => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicQuoted.new: value => "a"]),
+  Q|{{ "a" }}|                 => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicQuoted.new: value => "a", :double]),
+  Q|{{ 1 + 2 }}|               => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicInfixOp.new: :left(NJK::AST::LogicNumeric.new: value => 1), :right(NJK::AST::LogicNumeric.new: value => 2), :op<+>]),
+  Q|{{ 1 - 2 }}|               => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicInfixOp.new: :left(NJK::AST::LogicNumeric.new: value => 1), :right(NJK::AST::LogicNumeric.new: value => 2), :op<->]),
+  Q|{{ 1 * 2 }}|               => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicInfixOp.new: :left(NJK::AST::LogicNumeric.new: value => 1), :right(NJK::AST::LogicNumeric.new: value => 2), :op<*>]),
+  Q|{{ 1 / 2 }}|               => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicInfixOp.new: :left(NJK::AST::LogicNumeric.new: value => 1), :right(NJK::AST::LogicNumeric.new: value => 2), :op</>]),
+  Q|{{ 1 * 2 + 3 - 4 / 5 }}|   => NJK::AST::Unit.new(parts => [NJK::AST::Value.new: value => NJK::AST::LogicInfixOp.new: left => NJK::AST::LogicNumeric.new(value => 1), right => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 2), right => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 3), right => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 4), right => NJK::AST::LogicNumeric.new(value => 5), op => "/"), op => "-"), op => "+"), op => "*"]),
+
+  Q|{% if 1 %}bla{% endif %}|  => NJK::AST::Unit.new(parts => [NJK::AST::If.new: condition => NJK::AST::LogicNumeric.new(value => 1), block => [NJK::AST::HTMLText.new: value => "bla"], :else(Array[NJK::AST].new(NJK::AST))]),
+  Q|{% if 1 %}bla{% else %}ble{% endif %}|  => NJK::AST::Unit.new(parts => [NJK::AST::If.new: condition => NJK::AST::LogicNumeric.new(value => 1), block => [NJK::AST::HTMLText.new: value => "bla"], :else[NJK::AST::HTMLText.new: value => "ble"]]),
+  Q|{% if 1 %}bla{% elif 2 %}ble{% else %}bli{% endif %}|  => NJK::AST::Unit.new(parts => [NJK::AST::If.new: condition => NJK::AST::LogicNumeric.new(value => 1), block => [NJK::AST::HTMLText.new: value => "bla"], :elif[NJK::AST::LogicNumeric.new(value => 2) => [NJK::AST::HTMLText.new: value => "ble"]], :else[NJK::AST::HTMLText.new: value => "bli"]]),
+
+  Q|{% for i in items %}bla{% endfor %}| => NJK::AST::Unit.new(parts => Array[NJK::AST].new(NJK::AST::For.new(iterating => Array[NJK::AST].new(NJK::AST::DeclareVar.new(name => "i ")), iterator => NJK::AST::UseVariable.new(name => "items "), block => Array[NJK::AST].new(NJK::AST::HTMLText.new(value => "bla")), else => Array[NJK::AST].new(NJK::AST)))),
+  Q|{% for i in items %}bla{% else %}ble{% endfor %}| => NJK::AST::Unit.new(parts => Array[NJK::AST].new(NJK::AST::For.new(iterating => Array[NJK::AST].new(NJK::AST::DeclareVar.new(name => "i ")), iterator => NJK::AST::UseVariable.new(name => "items "), block => Array[NJK::AST].new(NJK::AST::HTMLText.new(value => "bla")), else => Array[NJK::AST].new(NJK::AST::HTMLText.new(value => "ble"))))),
+];
+
+for @tests -> (:$key, :$value) {
+  my $match = NJK::Grammar.parse: :actions(NJK::Actions), $key;
+  isa-ok $match, Match;
+  isa-ok $match.ast, NJK::AST::Unit;
+  is-deeply $match.ast, $value
+}
 
 done-testing;

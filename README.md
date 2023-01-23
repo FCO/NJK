@@ -1,90 +1,31 @@
+[![Actions Status](https://github.com/FCO/NJK/actions/workflows/test.yml/badge.svg)](https://github.com/FCO/NJK/actions)
+
+NAME
+====
+
+NJK - blah blah blah
+
+SYNOPSIS
+========
+
+```raku
+use NJK;
 ```
-➜  NJK git:(main) raku -Ilib -MNJK::Grammar -MNJK::Actions -e '
-dd NJK::Grammar.parse(:actions(NJK::Actions), q|<a href="pudim.com.br">pudim</a><br>test!<br>{{ "test" }}{{ 1 + 1 * 1 - 1 / 1 }}|).ast;
-'
-NJK::AST::Unit.new(parts => Array[NJK::AST].new(NJK::AST::HTMLTagBody.new(tag-name => "a", params => {:href("pudim.com.br")}, body => Array[NJK::AST].new(NJK::AST::HTMLText.new(value => "pudim"))), NJK::AST::HTMLTagVoid.new(tag-name => "br", params => {}), NJK::AST::HTMLText.new(value => "test!"), NJK::AST::HTMLTagVoid.new(tag-name => "br", params => {}), NJK::AST::Value.new(value => NJK::AST::LogicQuoted.new(value => "test", double => Bool::True)), NJK::AST::Value.new(value => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 1), right => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 1), right => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 1), right => NJK::AST::LogicInfixOp.new(left => NJK::AST::LogicNumeric.new(value => 1), right => NJK::AST::LogicNumeric.new(value => 1), op => "/"), op => "-"), op => "*"), op => "+"))))
 
-➜  NJK git:(main) raku -Ilib -MNJK::Grammar -MNJK::Actions -e '
-say NJK::Grammar.parse(:actions(NJK::Actions), q|<a href="pudim.com.br">pudim</a><br>test!<br>{{ "test" }}{{ 1 + 1 * 1 - 1 / 1 }}|).ast;
-'
-NJK::AST::Unit:
-    - parts:
-        NJK::AST::HTMLTagBody:
-            - tag-name:
-                a
-            - params:
-                href	pudim.com.br
-            - body:
-                NJK::AST::HTMLText:
-                    - value:
-                        pudim
+DESCRIPTION
+===========
 
-         NJK::AST::HTMLTagVoid:
-            - tag-name:
-                br
-            - params:
+NJK is ...
 
-         NJK::AST::HTMLText:
-            - value:
-                test!
-         NJK::AST::HTMLTagVoid:
-            - tag-name:
-                br
-            - params:
+AUTHOR
+======
 
-         NJK::AST::Value:
-            - value:
-                NJK::AST::LogicQuoted:
-                    - value:
-                        test
-                    - double:
-                        True
+Fernando Corrêa de Oliveira <fco@cpan.org>
 
-         NJK::AST::Value:
-            - value:
-                NJK::AST::LogicInfixOp:
-                    - left:
-                        NJK::AST::LogicNumeric:
-                            - value:
-                                1
+COPYRIGHT AND LICENSE
+=====================
 
-                    - right:
-                        NJK::AST::LogicInfixOp:
-                            - left:
-                                NJK::AST::LogicNumeric:
-                                    - value:
-                                        1
+Copyright 2023 Fernando Corrêa de Oliveira
 
-                            - right:
-                                NJK::AST::LogicInfixOp:
-                                    - left:
-                                        NJK::AST::LogicNumeric:
-                                            - value:
-                                                1
+This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
-                                    - right:
-                                        NJK::AST::LogicInfixOp:
-                                            - left:
-                                                NJK::AST::LogicNumeric:
-                                                    - value:
-                                                        1
-
-                                            - right:
-                                                NJK::AST::LogicNumeric:
-                                                    - value:
-                                                        1
-
-                                            - op:
-                                                /
-
-                                    - op:
-                                        -
-
-                            - op:
-                                *
-
-                    - op:
-                        +
-
-
-```
