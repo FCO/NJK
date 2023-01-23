@@ -1,5 +1,6 @@
 use NJK::AST::DeclareVar;
 use NJK::AST::UseVariable;
+use NJK::AST::Set;
 unit role NJK::Actions::Variables;
 
 method statement:sym<set>($/) {

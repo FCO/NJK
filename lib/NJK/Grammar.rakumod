@@ -10,6 +10,7 @@ also does NJK::Grammar::Block;
 also does NJK::Grammar::Variables;
 
 rule TOP {
+  :my %*VARIABLES;
   <part>*
 }
 
@@ -46,6 +47,7 @@ proto rule logic-basic {*}
       rule logic-basic:sym<quote>  { "'" ~ "'" $<value>=<-[']>+ } # TODO: Fix
       rule logic-basic:sym<dquote> { '"' ~ '"' $<value>=<-["]>+ } # TODO: Fix
       rule logic-basic:sym<func>   { $<name>=\w+["(" ~ ")" [ <param=.logic>* % ',' ]] }
+      rule logic-basic:sym<array>  { "[" ~ "]" <value=.logic>* %% ',' }
 
 proto rule statement {*}
 

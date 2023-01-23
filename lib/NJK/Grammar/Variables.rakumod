@@ -12,8 +12,10 @@ rule statement:sym<set-block> {
 
 rule declare-var {
   <[a..zA..Z]><[a..zA..Z0..9_]>*
+  { %*VARIABLES{$/} = True }
 }
 
 rule variable {
-  <[a..zA..Z]><[a..zA..Z0..9_]>+
+  :my @vars = %*VARIABLES.keys;
+  @vars || die "deu ruim"
 }
