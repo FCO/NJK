@@ -11,11 +11,11 @@ rule statement:sym<set-block> {
 }
 
 rule declare-var {
-  <[a..zA..Z]><[a..zA..Z0..9_]>*
+  <[a..zA..Z_]><[a..zA..Z0..9_]>*
   { %*VARIABLES{$/} = True }
 }
 
 rule variable {
   :my @vars = %*VARIABLES.keys;
-  @vars || die "deu ruim"
+  @vars || <[a..zA..Z_]><[a..zA..Z0..9_]>+ && <error("Variable not defined")>
 }

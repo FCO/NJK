@@ -43,7 +43,8 @@
     "NJK::Grammar::Block": "lib/NJK/Grammar/Block.rakumod",
     "NJK::Grammar::For": "lib/NJK/Grammar/For.rakumod",
     "NJK::Grammar::If": "lib/NJK/Grammar/If.rakumod",
-    "NJK::Grammar::Variables": "lib/NJK/Grammar/Variables.rakumod"
+    "NJK::Grammar::Variables": "lib/NJK/Grammar/Variables.rakumod",
+    "X::NJK::ParsingError": "lib/X/NJK/ParsingError.rakumod"
   },
   "resources": [
   ],

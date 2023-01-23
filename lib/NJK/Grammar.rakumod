@@ -2,6 +2,7 @@ use NJK::Grammar::If;
 use NJK::Grammar::For;
 use NJK::Grammar::Block;
 use NJK::Grammar::Variables;
+use X::NJK::ParsingError;
 
 unit grammar NJK::Grammar;
 also does NJK::Grammar::If;
@@ -29,10 +30,10 @@ rule filter {
 }
 
 proto rule logic {*}
-      rule logic:sym<var>   { <variable> }
       rule logic:sym<op1>   { <logic-basic> <logic-op1> <logic> }
       rule logic:sym<op2>   { <logic-basic> <logic-op2> <logic> }
       rule logic:sym<basic> { <logic-basic> }
+      rule logic:sym<var>   { <variable> }
 
 proto token logic-op1 {*}
       token logic-op1:sym<*> { <sym> }
@@ -108,3 +109,18 @@ proto token tag-void-name {*}
       token tag-void-name:sym<source>  { <sym> }
       token tag-void-name:sym<track>   { <sym> }
       token tag-void-name:sym<wbr>     { <sym> }
+
+
+
+method error($msg) {
+  my $parsed-so-far = self.target.substr(0, self.pos);
+  my @lines = $parsed-so-far.lines;
+  my $break = self.pos + 15;
+  my $not-parsed = self.target.substr: self.pos, $break;
+  X::NJK::ParsingError.new(
+    :error($msg),
+    :line-no(@lines.elems),
+    :last-line(@lines[*-1]),
+    :$not-parsed,
+  ).throw
+}
