@@ -7,7 +7,14 @@ use NJK::AST::HTMLText;
 use NJK::AST::Value;
 use NJK::AST::Unit;
 
+use NJK::Actions::Variables;
+use NJK::Actions::If;
+use NJK::Actions::For;
+
 unit class NJK::Actions;
+also does NJK::Actions::Variables;
+also does NJK::Actions::If;
+also does NJK::Actions::For;
 
 method TOP($/) {
   make NJK::AST::Unit.new: parts => @<part>».made

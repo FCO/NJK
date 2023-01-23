@@ -1,4 +1,11 @@
+use NJK::Grammar::If;
+use NJK::Grammar::For;
+use NJK::Grammar::Variables;
+
 unit grammar NJK::Grammar;
+also does NJK::Grammar::If;
+also does NJK::Grammar::For;
+also does NJK::Grammar::Variables;
 
 rule TOP {
   <part>*
@@ -15,6 +22,7 @@ rule value {
 }
 
 proto rule logic {*}
+      rule logic:sym<var>   { <variable> }
       rule logic:sym<op1>   { <logic-basic> <logic-op1> <logic> }
       rule logic:sym<op2>   { <logic-basic> <logic-op2> <logic> }
       rule logic:sym<basic> { <logic-basic> }
