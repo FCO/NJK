@@ -11,7 +11,13 @@ also does NJK::Grammar::Block;
 also does NJK::Grammar::Variables;
 
 rule TOP {
+  :my %*INPUTS;
+  <block>
+}
+
+rule block {
   :my %*VARIABLES;
+  :my %*BLOCKS;
   <part>*
 }
 

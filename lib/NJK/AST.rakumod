@@ -8,7 +8,7 @@ method gist {
       "- {
         .name.substr: 2
       }:\n{
-        self."{ .name.substr: 2 }"()».gist.indent(4)
+        self."{ .name.substr: 2 }"().map({ .defined ??.gist !! "" }).indent(4)
       }".indent: 4
     }).join: "\n"
   }

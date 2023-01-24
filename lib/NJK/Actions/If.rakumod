@@ -4,15 +4,15 @@ unit role NJK::Actions::If;
 method statement:sym<if>($/) {
   make NJK::AST::If.new:
     :condition($<condition>.made),
-    :block($<block>».made),
+    :block($<block>.made),
     :elif($<elif>».made),
     :else($<else>.made),
 }
 
 method if-else($/) {
-  make $<part>».made
+  make $<block>.made
 }
 
 method if-elif($/) {
-  make ($<logic>.made => $<part>».made)
+  make ($<logic>.made => $<block>.made)
 }

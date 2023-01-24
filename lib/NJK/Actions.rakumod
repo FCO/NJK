@@ -22,7 +22,11 @@ also does NJK::Actions::For;
 also does NJK::Actions::Block;
 
 method TOP($/) {
-  make NJK::AST::Unit.new: parts => @<part>».made
+  make NJK::AST::Unit.new: block => $<block>.made, inputs => %*INPUTS
+}
+
+method block($/) {
+  make NJK::AST::StatementBlock.new: parts => @<part>».made, variables => %*VARIABLES, blocks => %*BLOCKS
 }
 
 method part($/) {

@@ -1,5 +1,9 @@
 unit role NJK::Grammar::Variables;
 
+rule statement:sym<input> {
+  '{%' ~ '%}' [ "input" <declare-var(:input)> ]
+}
+
 rule statement:sym<set> {
   '{%' ~ '%}' [ "set" <declare-var> "=" <logic> ]
 }
@@ -10,12 +14,15 @@ rule statement:sym<set-block> {
   '{%' ~ '%}' "endset"
 }
 
-rule declare-var {
+rule declare-var(:$input) {
   <[a..zA..Z_]><[a..zA..Z0..9_]>*
-  { %*VARIABLES{$/} = True }
+  {
+    %*VARIABLES{$/.Str.trim} = True;
+    %*INPUTS{$/.Str.trim}     = True if $input;
+  }
 }
 
 rule variable {
-  :my @vars = %*VARIABLES.keys;
+  :my @vars = |%*VARIABLES.keys, |(%*PARENT-VARIABLES // %()).keys;
   @vars || <[a..zA..Z_]><[a..zA..Z0..9_]>+ && <error("Variable not defined")>
 }
