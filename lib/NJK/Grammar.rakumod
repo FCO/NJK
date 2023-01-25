@@ -2,6 +2,7 @@ use NJK::Grammar::If;
 use NJK::Grammar::For;
 use NJK::Grammar::Block;
 use NJK::Grammar::Variables;
+use NJK::Grammar::Extends;
 use X::NJK::ParsingError;
 
 unit grammar NJK::Grammar;
@@ -9,6 +10,7 @@ also does NJK::Grammar::If;
 also does NJK::Grammar::For;
 also does NJK::Grammar::Block;
 also does NJK::Grammar::Variables;
+also does NJK::Grammar::Extends;
 
 rule TOP {
   :my %*INPUTS;
@@ -28,7 +30,7 @@ rule part {
 }
 
 rule value {
-  '{{' ~ '}}' [ <logic> ['|' <filter>]* ]
+  '{{' ~ '}}' [ <logic> ['|' <filter>]* || <.error("Error on value")> ]
 }
 
 rule filter {

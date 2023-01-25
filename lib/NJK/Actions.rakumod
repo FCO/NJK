@@ -14,12 +14,14 @@ use NJK::Actions::Variables;
 use NJK::Actions::If;
 use NJK::Actions::For;
 use NJK::Actions::Block;
+use NJK::Actions::Extends;
 
 unit class NJK::Actions;
 also does NJK::Actions::Variables;
 also does NJK::Actions::If;
 also does NJK::Actions::For;
 also does NJK::Actions::Block;
+also does NJK::Actions::Extends;
 
 method TOP($/) {
   make NJK::AST::Unit.new: block => $<block>.made, inputs => %*INPUTS

@@ -42,7 +42,26 @@ my @tests = [
   Q|{% set items = [] %}{% for i in items %}bla{% endfor %}|              => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new(parts => [NJK::AST::Set.new(variable => NJK::AST::DeclareVar.new(name => "items"), value => NJK::AST::LogicArray.new(values => [])), NJK::AST::For.new(iterating => [NJK::AST::DeclareVar.new(name => "i")], iterator => NJK::AST::UseVariable.new(name => "items"), block => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "bla")]))], variables => { items => True })),
   Q|{% set items = [] %}{% for i in items %}bla{% else %}ble{% endfor %}| => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new(parts => [NJK::AST::Set.new(variable => NJK::AST::DeclareVar.new(name => "items"), value => NJK::AST::LogicArray.new(values => [])), NJK::AST::For.new(iterating => [NJK::AST::DeclareVar.new(name => "i")], iterator => NJK::AST::UseVariable.new(name => "items"), block => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "bla")]), else => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "ble")]))], variables => { items => True })),
 
-  Q|{% block test %}bla{% endblock %}| => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new: parts => [NJK::AST::Block.new(name => "test", block => [NJK::AST::HTMLText.new(value => "bla")], else => Array[NJK::AST].new(NJK::AST))]),
+  Q|{% block test %}bla{% endblock %}| => NJK::AST::Unit.new(
+    block => NJK::AST::StatementBlock.new(
+      parts => [
+        NJK::AST::Block.new(
+          name => "test",
+          block => [
+            NJK::AST::HTMLText.new(value => "bla"),
+          ],
+        ),
+      ],
+      blocks => %(
+        test => NJK::AST::Block.new(
+          name => "test",
+          block => [
+            NJK::AST::HTMLText.new(value => "bla"),
+          ],
+        ),
+      ),
+    ),
+  ),
 
   Q|{{ super() }}|         => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new: parts => [NJK::AST::Value.new: value => NJK::AST::LogicFuncCall.new: name => "super"]),
   Q|{{ func(1, 2, "c") }}| => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new: parts => [NJK::AST::Value.new: value => NJK::AST::LogicFuncCall.new: name => "func", params => [NJK::AST::LogicNumeric.new(value => 1), NJK::AST::LogicNumeric.new(value => 2), NJK::AST::LogicQuoted.new(value => "c", :double)]]),
