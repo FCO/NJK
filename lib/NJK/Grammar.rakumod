@@ -3,6 +3,7 @@ use NJK::Grammar::For;
 use NJK::Grammar::Block;
 use NJK::Grammar::Variables;
 use NJK::Grammar::Extends;
+use NJK::Grammar::Include;
 use X::NJK::ParsingError;
 
 unit grammar NJK::Grammar;
@@ -11,6 +12,7 @@ also does NJK::Grammar::For;
 also does NJK::Grammar::Block;
 also does NJK::Grammar::Variables;
 also does NJK::Grammar::Extends;
+also does NJK::Grammar::Include;
 
 rule TOP {
   :my %*INPUTS;
@@ -28,6 +30,18 @@ rule part {
   | <statement>
   | <html>
 }
+
+token file(:$no-error) {
+  [
+    || <quoted-file> <?{ $<quoted-file><value>.Str.IO.e }>
+    || <?{ $no-error }>
+    || <.error("File \o33[31m$<quoted-file><value>\o33[m does not exist")>
+  ]
+}
+
+proto token quoted-file {*}
+      token quoted-file:sym<double> { '"' ~ '"' $<value>=[<-["]>*] }
+      token quoted-file:sym<single> { "'" ~ "'" $<value>=[<-[']>*] }
 
 rule value {
   '{{' ~ '}}' [ <logic> ['|' <filter>]* || <.error("Error on value")> ]

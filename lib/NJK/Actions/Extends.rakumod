@@ -11,10 +11,3 @@ method statement:sym<extends>($/ is copy) {
     :file($file),
     :exported($match.ast),
 }
-
-method file($/) {
-  make $<quoted-file>.made
-}
-
-method quoted-file:sym<double>($/) { make ~$<value> }
-method quoted-file:sym<single>($/) { make ~$<value> }

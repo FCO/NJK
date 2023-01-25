@@ -15,6 +15,7 @@ use NJK::Actions::If;
 use NJK::Actions::For;
 use NJK::Actions::Block;
 use NJK::Actions::Extends;
+use NJK::Actions::Include;
 
 unit class NJK::Actions;
 also does NJK::Actions::Variables;
@@ -22,6 +23,7 @@ also does NJK::Actions::If;
 also does NJK::Actions::For;
 also does NJK::Actions::Block;
 also does NJK::Actions::Extends;
+also does NJK::Actions::Include;
 
 method TOP($/) {
   make NJK::AST::Unit.new: block => $<block>.made, inputs => %*INPUTS
@@ -36,6 +38,13 @@ method part($/) {
     $<value> // $<statement> // $<html>
   ).made
 }
+
+method file($/) {
+  make $<quoted-file>.made
+}
+
+method quoted-file:sym<double>($/) { make ~$<value> }
+method quoted-file:sym<single>($/) { make ~$<value> }
 
 method value($/) {
   make NJK::AST::Value.new: value => $<logic>.made, filters => $<filter>.map: { NJK::AST::Filter.new: :name(~.<name>), :params[.<param>».made] }
