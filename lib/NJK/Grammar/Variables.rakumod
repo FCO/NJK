@@ -14,15 +14,21 @@ rule statement:sym<set-block> {
   '{%' ~ '%}' "endset"
 }
 
-rule declare-var(:$input) {
+token var-name {
   <[a..zA..Z_]><[a..zA..Z0..9_]>*
+}
+
+rule declare-var(:$input) {
+  <var-name>
+  [ ":" <type> ]?
   {
-    %*VARIABLES{$/.Str.trim} = True;
-    %*INPUTS{$/.Str.trim}     = True if $input;
+    require ::("NJK::Type");
+    %*VARIABLES{$<var-name>.Str.trim} = ::("NJK::Type").new: ($<type>.defined ?? $<type> !! "any").Str;
+    %*INPUTS{$<var-name>.Str.trim}    = ::("NJK::Type").new: ($<type>.defined ?? $<type> !! "any").Str if $input;
   }
 }
 
 rule variable {
   :my @vars = |%*VARIABLES.keys, |(%*PARENT-VARIABLES // %()).keys;
-  @vars || <[a..zA..Z_]><[a..zA..Z0..9_]>+ && <error("Variable not defined")>
+  @vars || <var-name> && <error("Variable not defined")>
 }

@@ -44,6 +44,7 @@
     "NJK::Actions::For": "lib/NJK/Actions/For.rakumod",
     "NJK::Actions::If": "lib/NJK/Actions/If.rakumod",
     "NJK::Actions::Include": "lib/NJK/Actions/Include.rakumod",
+    "NJK::Actions::Type": "lib/NJK/Actions/Type.rakumod",
     "NJK::Actions::Variables": "lib/NJK/Actions/Variables.rakumod",
     "NJK::Grammar": "lib/NJK/Grammar.rakumod",
     "NJK::Grammar::Block": "lib/NJK/Grammar/Block.rakumod",
@@ -51,7 +52,9 @@
     "NJK::Grammar::For": "lib/NJK/Grammar/For.rakumod",
     "NJK::Grammar::If": "lib/NJK/Grammar/If.rakumod",
     "NJK::Grammar::Include": "lib/NJK/Grammar/Include.rakumod",
+    "NJK::Grammar::Type": "lib/NJK/Grammar/Type.rakumod",
     "NJK::Grammar::Variables": "lib/NJK/Grammar/Variables.rakumod",
+    "NJK::Type": "lib/NJK/Type.rakumod",
     "X::NJK::ParsingError": "lib/X/NJK/ParsingError.rakumod"
   },
   "resources": [

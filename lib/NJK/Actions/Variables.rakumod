@@ -16,8 +16,12 @@ method statement:sym<set-block>($/) {
   make NJK::AST::SetBlock.new: :variable($<declare-var>.made), :value($<part>.made)
 }
 
+method var-name($/) {
+  make $/.Str.trim
+}
+
 method declare-var($/) {
-  make NJK::AST::DeclareVar.new: name => $/.Str.trim
+  make NJK::AST::DeclareVar.new: name => $<var-name>.made
 }
 
 method variable($/) {

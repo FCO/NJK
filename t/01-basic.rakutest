@@ -14,6 +14,8 @@ use NJK::AST::If;
 use NJK::AST::For;
 use NJK::AST::Block;
 use NJK::AST::Filter;
+use NJK::AST::Input;
+use NJK::Type;
 use X::NJK::ParsingError;
 
 my @tests = [
@@ -39,8 +41,55 @@ my @tests = [
   Q|{% if 1 %}bla{% else %}ble{% endif %}|                 => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new(parts => [NJK::AST::If.new(condition => NJK::AST::LogicNumeric.new(value => 1), block => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new: value => "bla"]), else => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "ble")]))])),
   Q|{% if 1 %}bla{% elif 2 %}ble{% else %}bli{% endif %}|  => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new(parts => [NJK::AST::If.new(condition => NJK::AST::LogicNumeric.new(value => 1), block => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new: value => "bla"]), elif => [NJK::AST::LogicNumeric.new(value => 2) => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "ble")])], else => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new: value => "bli"]))])),
 
-  Q|{% set items = [] %}{% for i in items %}bla{% endfor %}|              => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new(parts => [NJK::AST::Set.new(variable => NJK::AST::DeclareVar.new(name => "items"), value => NJK::AST::LogicArray.new(values => [])), NJK::AST::For.new(iterating => [NJK::AST::DeclareVar.new(name => "i")], iterator => NJK::AST::UseVariable.new(name => "items"), block => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "bla")]))], variables => { items => True })),
-  Q|{% set items = [] %}{% for i in items %}bla{% else %}ble{% endfor %}| => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new(parts => [NJK::AST::Set.new(variable => NJK::AST::DeclareVar.new(name => "items"), value => NJK::AST::LogicArray.new(values => [])), NJK::AST::For.new(iterating => [NJK::AST::DeclareVar.new(name => "i")], iterator => NJK::AST::UseVariable.new(name => "items"), block => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "bla")]), else => NJK::AST::StatementBlock.new(parts => [NJK::AST::HTMLText.new(value => "ble")]))], variables => { items => True })),
+  Q|{% set items = [] %}{% for i in items %}bla{% endfor %}| => NJK::AST::Unit.new(
+    block => NJK::AST::StatementBlock.new(
+      parts => [
+        NJK::AST::Set.new(
+          variable => NJK::AST::DeclareVar.new(name => "items"),
+          value    => NJK::AST::LogicArray.new(values => [])
+        ),
+        NJK::AST::For.new(
+          iterating => [
+            NJK::AST::DeclareVar.new(name => "i")
+          ],
+          iterator => NJK::AST::UseVariable.new(name => "items"),
+          block    => NJK::AST::StatementBlock.new(
+            parts => [
+              NJK::AST::HTMLText.new(value => "bla")
+            ]
+          )
+        )
+      ],
+      variables => { items => NJK::Type.new: "any" }
+    )
+  ),
+  Q|{% set items = [] %}{% for i in items %}bla{% else %}ble{% endfor %}| => NJK::AST::Unit.new(
+    block => NJK::AST::StatementBlock.new(
+      parts => [
+        NJK::AST::Set.new(
+          variable => NJK::AST::DeclareVar.new(name => "items"),
+          value    => NJK::AST::LogicArray.new(values => [])
+        ),
+        NJK::AST::For.new(
+          iterating => [
+            NJK::AST::DeclareVar.new(name => "i"),
+          ],
+          iterator => NJK::AST::UseVariable.new(name => "items"),
+          block    => NJK::AST::StatementBlock.new(
+            parts => [
+              NJK::AST::HTMLText.new(value => "bla"),
+            ]
+          ),
+          else => NJK::AST::StatementBlock.new(
+            parts => [
+              NJK::AST::HTMLText.new(value => "ble")
+            ]
+          )
+        )
+      ],
+      variables => { items => NJK::Type.new: "any" }
+    )
+  ),
 
   Q|{% block test %}bla{% endblock %}| => NJK::AST::Unit.new(
     block => NJK::AST::StatementBlock.new(
@@ -65,6 +114,39 @@ my @tests = [
 
   Q|{{ super() }}|         => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new: parts => [NJK::AST::Value.new: value => NJK::AST::LogicFuncCall.new: name => "super"]),
   Q|{{ func(1, 2, "c") }}| => NJK::AST::Unit.new(block => NJK::AST::StatementBlock.new: parts => [NJK::AST::Value.new: value => NJK::AST::LogicFuncCall.new: name => "func", params => [NJK::AST::LogicNumeric.new(value => 1), NJK::AST::LogicNumeric.new(value => 2), NJK::AST::LogicQuoted.new(value => "c", :double)]]),
+  Q|{% input bla %}| => NJK::AST::Unit.new(
+    block => NJK::AST::StatementBlock.new(
+      parts => [
+        NJK::AST::Input.new(
+          variable => NJK::AST::DeclareVar.new(name => "bla"),
+        ),
+      ],
+      variables => { bla => NJK::Type.new: "any" },
+    ),
+    inputs => { bla => NJK::Type.new: "any" },
+  ),
+  Q<{% input bla : string %}> => NJK::AST::Unit.new(
+    block => NJK::AST::StatementBlock.new(
+      parts => [
+        NJK::AST::Input.new(
+          variable => NJK::AST::DeclareVar.new(name => "bla"),
+        ),
+      ],
+      variables => { bla => NJK::Type.new: "string" },
+    ),
+    inputs => { bla => NJK::Type.new: "string" },
+  ),
+  Q<{% input bla : string|number|object[string|array[number]] %}> => NJK::AST::Unit.new(
+    block => NJK::AST::StatementBlock.new(
+      parts => [
+        NJK::AST::Input.new(
+          variable => NJK::AST::DeclareVar.new(name => "bla"),
+        ),
+      ],
+      variables => { bla => NJK::Type.new: "string|number|object[string|array[number]]" },
+    ),
+    inputs => { bla => NJK::Type.new: "string|number|object[string|array[number]]" },
+  ),
 ];
 
 for @tests -> (:$key, :$value) {
