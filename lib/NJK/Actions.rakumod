@@ -1,4 +1,5 @@
 use NJK::AST::LogicInfixOp;
+use NJK::AST::LogicBoolean;
 use NJK::AST::LogicNumeric;
 use NJK::AST::LogicQuoted;
 use NJK::AST::LogicFuncCall;
@@ -47,11 +48,15 @@ method quoted-file:sym<double>($/) { make ~$<value> }
 method quoted-file:sym<single>($/) { make ~$<value> }
 
 method value($/) {
-  make NJK::AST::Value.new: value => $<logic>.made, filters => $<filter>.map: { NJK::AST::Filter.new: :name(~.<name>), :params[.<param>».made] }
+  make NJK::AST::Value.new: value => $<want>.made, filters => $<filter>.map: { NJK::AST::Filter.new: :name(~.<name>), :params[.<param>».made] }
 }
 
-method logic:sym<op1>($/)   { make NJK::AST::LogicInfixOp.new: left => $<logic-basic>.made, op => $<logic-op1>.made, right => $<logic>.made }
-method logic:sym<op2>($/)   { make NJK::AST::LogicInfixOp.new: left => $<logic-basic>.made, op => $<logic-op2>.made, right => $<logic>.made }
+method want($/) {
+  make $<logic>.made
+}
+
+method logic:sym<op1>($/)   { make NJK::AST::LogicInfixOp.new: left => $<logic-basic>.made, op => $<logic-op1>.made, right => $<want>.made }
+method logic:sym<op2>($/)   { make NJK::AST::LogicInfixOp.new: left => $<logic-basic>.made, op => $<logic-op2>.made, right => $<want>.made }
 method logic:sym<basic>($/) { make $<logic-basic>.made }
 
 method logic-op1:sym<*>($/) { make ~$<sym> }
@@ -60,6 +65,7 @@ method logic-op1:sym</>($/) { make ~$<sym> }
 method logic-op2:sym<+>($/) { make ~$<sym> }
 method logic-op2:sym<->($/) { make ~$<sym> }
 
+method logic-basic:sym<bool>($/)   { make NJK::AST::LogicBoolean.new(value => ($/.Str.trim eq "true")) }
 method logic-basic:sym<num>($/)    { make NJK::AST::LogicNumeric.new: value => +$/ }
 method logic-basic:sym<quote>($/)  { make NJK::AST::LogicQuoted.new: value => ~$<value> }
 method logic-basic:sym<dquote>($/) { make NJK::AST::LogicQuoted.new: value => ~$<value>, :double }

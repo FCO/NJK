@@ -28,6 +28,7 @@
     "NJK::AST::Input": "lib/NJK/AST/Input.rakumod",
     "NJK::AST::Logic": "lib/NJK/AST/Logic.rakumod",
     "NJK::AST::LogicArray": "lib/NJK/AST/LogicArray.rakumod",
+    "NJK::AST::LogicBoolean": "lib/NJK/AST/LogicBoolean.rakumod",
     "NJK::AST::LogicFuncCall": "lib/NJK/AST/LogicFuncCall.rakumod",
     "NJK::AST::LogicInfixOp": "lib/NJK/AST/LogicInfixOp.rakumod",
     "NJK::AST::LogicNumeric": "lib/NJK/AST/LogicNumeric.rakumod",

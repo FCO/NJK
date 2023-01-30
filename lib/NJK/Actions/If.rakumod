@@ -14,5 +14,5 @@ method if-else($/) {
 }
 
 method if-elif($/) {
-  make ($<logic>.made => $<block>.made)
+  make ($<want>.made => $<block>.made)
 }

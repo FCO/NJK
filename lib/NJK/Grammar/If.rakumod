@@ -1,7 +1,7 @@
 unit role NJK::Grammar::If;
 
 rule statement:sym<if> {
-  '{%' ~ '%}' [ if <condition=.logic> ]
+  '{%' ~ '%}' [ if <condition=.want("boolean|number")> ]
   <block>
   <elif=.if-elif>*
   <else=.if-else>?
@@ -14,6 +14,6 @@ rule if-else {
 }
 
 rule if-elif {
-  '{%' ~ '%}' [ "elif" <logic> ]
+  '{%' ~ '%}' [ "elif" <want> ]
   <block>
 }

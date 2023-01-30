@@ -1,0 +1,39 @@
+use NJK::Type;
+
+use Test;
+
+my @types = <any boolean number string array object>;
+
+for @types -> $name {
+  my $type = NJK::Type.new: $name;
+  isa-ok $type, NJK::Type;
+  isa-ok $type.single-types.head, NJK::Type::Single;;
+  is $type.single-types.head.name, $name, "type: $name";
+}
+
+my @ok = [
+  [<any     any>],
+  [<boolean any>],
+  [<number any>],
+  [<string  any>],
+  [<array   any>],
+  [<object  any>],
+];
+
+my @nok = [
+  [<any boolean>],
+  [<any number>],
+  [<any string >],
+  [<any array  >],
+  [<any object >],
+];
+
+for @ok -> [Str $tested, Str $comparison] {
+  ok NJK::Type.new($tested) ~~ NJK::Type.new($comparison), "$tested ~~ $comparison";
+}
+
+for @nok -> [Str $tested, Str $comparison] {
+  nok NJK::Type.new($tested) ~~ NJK::Type.new($comparison), "$tested ~~ $comparison";
+}
+
+done-testing

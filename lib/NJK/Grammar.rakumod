@@ -16,6 +16,8 @@ also does NJK::Grammar::Extends;
 also does NJK::Grammar::Include;
 also does NJK::Grammar::Type;
 
+require ::("NJK::Type");
+
 rule TOP {
   :my %*INPUTS;
   <block>
@@ -46,18 +48,25 @@ proto token quoted-file {*}
       token quoted-file:sym<single> { "'" ~ "'" $<value>=[<-[']>*] }
 
 rule value {
-  '{{' ~ '}}' [ <logic> ['|' <filter>]* || <.error("Error on value")> ]
+  '{{' ~ '}}' [ <want> ['|' <filter>]* || <.error("Error on value")> ]
 }
 
 rule filter {
-  $<name>=\w+ [ "(" ~ ")" [ <param=.logic>* %% ',' ] ]?
+  $<name>=\w+ [ "(" ~ ")" [ <param=.want>* %% ',' ] ]?
+}
+
+token want($type = "any") {
+  :my $*LAST-TYPE;
+  :my $*WANTED = ::("NJK::Type").new: $type;
+  <logic>
+  [ <?{ say $*LAST-TYPE.gist ~ " ~~ $type"; $*LAST-TYPE ~~ $*WANTED }> || <.error("Wanted type $type but got { $*LAST-TYPE.gist }")> ]
 }
 
 proto rule logic {*}
-      rule logic:sym<op1>   { <logic-basic> <logic-op1> <logic> }
-      rule logic:sym<op2>   { <logic-basic> <logic-op2> <logic> }
-      rule logic:sym<basic> { <logic-basic> }
-      rule logic:sym<var>   { <variable> }
+      rule logic:sym<op1>   { <logic-basic> <logic-op1> <want("number")> }
+      rule logic:sym<op2>   { <logic-basic> <logic-op2> <want("number")> }
+      rule logic:sym<basic> { <logic-basic>                     }
+      rule logic:sym<var>   { <variable>                        }
 
 proto token logic-op1 {*}
       token logic-op1:sym<*> { <sym> }
@@ -68,11 +77,12 @@ proto token logic-op2 {*}
       token logic-op2:sym<-> { <sym> }
 
 proto rule logic-basic {*}
-      rule logic-basic:sym<num>    { <[+-]>? \d+[.\d+]? }
-      rule logic-basic:sym<quote>  { "'" ~ "'" $<value>=<-[']>+ } # TODO: Fix
-      rule logic-basic:sym<dquote> { '"' ~ '"' $<value>=<-["]>+ } # TODO: Fix
-      rule logic-basic:sym<func>   { $<name>=\w+["(" ~ ")" [ <param=.logic>* % ',' ]] }
-      rule logic-basic:sym<array>  { "[" ~ "]" <value=.logic>* %% ',' }
+      rule logic-basic:sym<bool>   { [ "true" | "false" ]                             { $*LAST-TYPE = ::("NJK::Type").new: "boolean" } }
+      rule logic-basic:sym<num>    { <[+-]>? \d+[.\d+]?                               { $*LAST-TYPE = ::("NJK::Type").new: "number"  } }
+      rule logic-basic:sym<quote>  { "'" ~ "'" $<value>=<-[']>+                       { $*LAST-TYPE = ::("NJK::Type").new: "string"  } } # TODO: Fix
+      rule logic-basic:sym<dquote> { '"' ~ '"' $<value>=<-["]>+                       { $*LAST-TYPE = ::("NJK::Type").new: "string"  } } # TODO: Fix
+      rule logic-basic:sym<func>   { $<name>=\w+["(" ~ ")" [ <param=.want>* % ',' ]]  { $*LAST-TYPE = ::("NJK::Type").new: "number"  } }
+      rule logic-basic:sym<array>  { "[" ~ "]" <value=.want>* %% ','                  { $*LAST-TYPE = ::("NJK::Type").new: "array"   } }
 
 proto rule statement {*}
 

@@ -1,4 +1,4 @@
-use NJK::Grammar;
+use NJK::Grammar::Type;
 unit class NJK::Type;
 
 class Single {
@@ -30,12 +30,14 @@ multi method gist(::?CLASS:D:) {
 
 proto method new(|) {*}
 multi method new(Str $_) {
-  self.new: NJK::Grammar.parse: :rule<type>, $_;
+  my $grammar     = grammar {} but NJK::Grammar::Type;
+  my Match $match = $grammar.parse: :rule<type>, $_;
+  self.new: $match
 }
 
-multi method new(Match $/) {
+multi method new(Match:D $/) {
   self.bless: :single-types(
-    $<type>.map: {
+    $<type-opt>.map: {
       Single.new:
         :name(~(.<type-name> // "any")),
         |(:sub-type(NJK::Type.new: $_) with .<type>)

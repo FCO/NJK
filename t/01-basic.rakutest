@@ -60,7 +60,7 @@ my @tests = [
           )
         )
       ],
-      variables => { items => NJK::Type.new: "any" }
+      variables => { items => NJK::Type.new: "array" }
     )
   ),
   Q|{% set items = [] %}{% for i in items %}bla{% else %}ble{% endfor %}| => NJK::AST::Unit.new(
@@ -87,7 +87,7 @@ my @tests = [
           )
         )
       ],
-      variables => { items => NJK::Type.new: "any" }
+      variables => { items => NJK::Type.new: "array" }
     )
   ),
 
