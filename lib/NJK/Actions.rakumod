@@ -17,6 +17,8 @@ use NJK::Actions::For;
 use NJK::Actions::Block;
 use NJK::Actions::Extends;
 use NJK::Actions::Include;
+use NJK::Actions::Macro;
+use NJK::Actions::Type;
 
 unit class NJK::Actions;
 also does NJK::Actions::Variables;
@@ -25,6 +27,8 @@ also does NJK::Actions::For;
 also does NJK::Actions::Block;
 also does NJK::Actions::Extends;
 also does NJK::Actions::Include;
+also does NJK::Actions::Macro;
+also does NJK::Actions::Type;
 
 method TOP($/) {
   make NJK::AST::Unit.new: block => $<block>.made, inputs => %*INPUTS

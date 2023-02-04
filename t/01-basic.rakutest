@@ -129,7 +129,7 @@ my @tests = [
     block => NJK::AST::StatementBlock.new(
       parts => [
         NJK::AST::Input.new(
-          variable => NJK::AST::DeclareVar.new(name => "bla"),
+          variable => NJK::AST::DeclareVar.new(name => "bla", type => NJK::Type.new: "string"),
         ),
       ],
       variables => { bla => NJK::Type.new: "string" },
@@ -140,7 +140,7 @@ my @tests = [
     block => NJK::AST::StatementBlock.new(
       parts => [
         NJK::AST::Input.new(
-          variable => NJK::AST::DeclareVar.new(name => "bla"),
+          variable => NJK::AST::DeclareVar.new(name => "bla", type => NJK::Type.new: "string|number|object[string|array[number]]"),
         ),
       ],
       variables => { bla => NJK::Type.new: "string|number|object[string|array[number]]" },

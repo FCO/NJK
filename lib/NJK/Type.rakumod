@@ -3,6 +3,7 @@ unit class NJK::Type;
 
 class Single {
   has Str       $.name;
+  has Str       $.return = $!name;
   has NJK::Type $.sub-type;
 
   method gist {
@@ -15,9 +16,9 @@ class Single {
 
   multi method ACCEPTS(::?CLASS:D: Single $_) {
     # say "1: { .gist } ~~ { self.gist }";
-    return True if $!name eq "any";
-    # say "$!name eq { .name }";
-    return False unless $!name eq .name;
+    return True if $!return eq "any";
+    # say "$!return eq { .name }";
+    return False unless $!return eq .return;
     return False if !$!sub-type && .sub-type;
     .sub-type ~~ $!sub-type
   }
@@ -27,6 +28,13 @@ class Enum is Single {
   has Str @.opts;
 
   method gist { "enum({ @!opts.join(", ") })" }
+}
+
+class Function is Single {
+  has NJK::Type @.positional-params;
+  has NJK::Type %.named-params; # TODO
+
+  method gist { "function({ @!positional-params».gist.join: ", " }):$.return" }
 }
 
 has Single @.single-types;
@@ -45,8 +53,14 @@ multi method new(Str $_) {
 multi method new(Match:D $/) {
   self.bless: :single-types(
     $<type-opt>.map: {
+      return Function.new(
+        :name<function>,
+        :return((.<type-name><return> // "string").Str),
+        :positional-params(.<type-name><positional-params>.map: { ::?CLASS.new: $_ }),
+      ) if .<type-name><sym> eq "function";
       return Enum.new(
-        :name<string>,
+        :name<enum>,
+        :return<string>,
         :opts(.<type-name><enum-opt>».Str)
       ) if .<type-name><sym> eq "enum";
       Single.new:

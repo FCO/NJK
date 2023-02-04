@@ -14,7 +14,6 @@ method statement:sym<set>($/) {
 }
 
 method statement:sym<set-block>($/) {
-  say $/;
   my %made   := $<njk-block>.made;
   my %inside := %made<inside-tag>.made;
   make NJK::AST::SetBlock.new: :variable($<njk-block><inside-tag>.made<declare-var>), :value(%made<block><part>.made)
@@ -25,7 +24,8 @@ method var-name($/) {
 }
 
 method declare-var($/) {
-  make NJK::AST::DeclareVar.new: name => $<var-name>.made
+  require ::("NJK::Type");
+  make NJK::AST::DeclareVar.new: name => $<var-name>.made, type => $<type>.made // ::("NJK::Type").new: "any"
 }
 
 method variable($/) {

@@ -5,6 +5,7 @@ use NJK::Grammar::Block;
 use NJK::Grammar::Variables;
 use NJK::Grammar::Extends;
 use NJK::Grammar::Include;
+use NJK::Grammar::Macro;
 use NJK::Grammar::Type;
 use X::NJK::ParsingError;
 
@@ -15,6 +16,7 @@ also does NJK::Grammar::Block;
 also does NJK::Grammar::Variables;
 also does NJK::Grammar::Extends;
 also does NJK::Grammar::Include;
+also does NJK::Grammar::Macro;
 also does NJK::Grammar::Type;
 
 require ::("NJK::Type");
