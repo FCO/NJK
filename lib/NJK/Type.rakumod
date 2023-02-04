@@ -16,10 +16,17 @@ class Single {
   multi method ACCEPTS(::?CLASS:D: Single $_) {
     # say "1: { .gist } ~~ { self.gist }";
     return True if $!name eq "any";
+    # say "$!name eq { .name }";
     return False unless $!name eq .name;
     return False if !$!sub-type && .sub-type;
     .sub-type ~~ $!sub-type
   }
+}
+
+class Enum is Single {
+  has Str @.opts;
+
+  method gist { "enum({ @!opts.join(", ") })" }
 }
 
 has Single @.single-types;
@@ -38,6 +45,10 @@ multi method new(Str $_) {
 multi method new(Match:D $/) {
   self.bless: :single-types(
     $<type-opt>.map: {
+      return Enum.new(
+        :name<string>,
+        :opts(.<type-name><enum-opt>».Str)
+      ) if .<type-name><sym> eq "enum";
       Single.new:
         :name(~(.<type-name> // "any")),
         |(:sub-type(NJK::Type.new: $_) with .<type>)

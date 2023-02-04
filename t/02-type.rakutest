@@ -12,12 +12,24 @@ for @types -> $name {
 }
 
 my @ok = [
-  [<any     any>],
-  [<boolean any>],
-  [<number any>],
-  [<string  any>],
-  [<array   any>],
-  [<object  any>],
+  [<any                    any>],
+  [<boolean                any>],
+  [<number                 any>],
+  [<string                 any>],
+  [<array                  any>],
+  [<object                 any>],
+  ["enum(bla)",           "any"],
+  ["enum(bla, ble, bli)", "any"],
+  ["enum(bla)",           "string"],
+  ["enum(bla, ble, bli)", "string"],
+
+  [<boolean                boolean|number|string|array|object>],
+  [<number                 boolean|number|string|array|object>],
+  [<string                 boolean|number|string|array|object>],
+  [<array                  boolean|number|string|array|object>],
+  [<object                 boolean|number|string|array|object>],
+  ["enum(bla)",           "boolean|number|string|array|object"],
+  ["enum(bla, ble, bli)", "boolean|number|string|array|object"],
 ];
 
 my @nok = [
@@ -29,10 +41,12 @@ my @nok = [
 ];
 
 for @ok -> [Str $tested, Str $comparison] {
+  diag "$tested.gist() ~~ $comparison.gist()";
   ok NJK::Type.new($tested) ~~ NJK::Type.new($comparison), "$tested ~~ $comparison";
 }
 
 for @nok -> [Str $tested, Str $comparison] {
+  diag "$tested.gist() !~~ $comparison.gist()";
   nok NJK::Type.new($tested) ~~ NJK::Type.new($comparison), "$tested ~~ $comparison";
 }
 

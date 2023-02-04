@@ -15,3 +15,6 @@ proto token type-name              { *      }
       token type-name:sym<number>  { <.sym> }
       token type-name:sym<array>   { <.sym> }
       token type-name:sym<object>  { <.sym> }
+      rule  type-name:sym<enum>    { <.sym> "(" ~ ")" <enum-opt>* % "," }
+
+token enum-opt { \w+ }
