@@ -2,11 +2,12 @@ use NJK::AST::If;
 unit role NJK::Actions::If;
 
 method statement:sym<if>($/) {
+  my %made := $<njk-block>.made;
   make NJK::AST::If.new:
-    :condition($<condition>.made),
-    :block($<block>.made),
-    :elif($<elif>».made),
-    :else($<else>.made),
+    :condition(%made<inside-tag>.made<condition>),
+    :block(%made<block><block>.made),
+    :elif(%made<block><elif>».made),
+    :else(%made<block><else>.made),
 }
 
 method if-else($/) {
@@ -14,5 +15,5 @@ method if-else($/) {
 }
 
 method if-elif($/) {
-  make ($<want>.made => $<block>.made)
+  make ($<njk-tag>.made<want> => $<block>.made)
 }

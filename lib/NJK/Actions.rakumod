@@ -40,6 +40,19 @@ method part($/) {
   ).made
 }
 
+method njk-tag($/) {
+  make $<regex>.kv.map(-> Str $key, \data {
+    $key => data ~~ Positional ?? data».made !! data.made
+  }).Map
+}
+
+method njk-block($/) {
+  make %(
+    inside-tag => $<opening-tag>,
+    block      => $<block>
+  )
+}
+
 method file($/) {
   make $<quoted-file>.made
 }

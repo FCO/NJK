@@ -1,3 +1,4 @@
+# use Grammar::Tracer;
 use NJK::Grammar::If;
 use NJK::Grammar::For;
 use NJK::Grammar::Block;
@@ -35,6 +36,14 @@ rule part {
   | <html>
 }
 
+rule njk-tag(Str $name, &regex = /<?>/) {
+  '{%' ~ '%}' [ $<name>=$name <?> $<regex>=&regex ]
+}
+
+rule njk-block(Str $name, &inside-tag = /<?>/, &block = /<block>/) {
+  <opening-tag=.njk-tag($name, &inside-tag)> ~ <closing-tag=.njk-tag("end$name")> $<block>=&block
+}
+
 token file(:$no-error) {
   [
     || <quoted-file> <?{ $<quoted-file><value>.Str.IO.e }>
@@ -59,7 +68,7 @@ token want($type = "any") {
   :my $*LAST-TYPE;
   :my $*WANTED = ::("NJK::Type").new: $type;
   <logic>
-  [ <?{ say $*LAST-TYPE.gist ~ " ~~ $type"; $*LAST-TYPE ~~ $*WANTED }> || <.error("Wanted type $type but got { $*LAST-TYPE.gist }")> ]
+  [ <?{ $*LAST-TYPE ~~ $*WANTED }> || <.error("Wanted type $type but got { $*LAST-TYPE.gist }")> ]
 }
 
 proto rule logic {*}

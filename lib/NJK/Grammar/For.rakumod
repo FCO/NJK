@@ -3,13 +3,17 @@ unit role NJK::Grammar::For;
 rule statement:sym<for> {
   :my %*PARENT-VARIABLES = |CALLERS::<%*VARIABLES>, |CALLERS::<%*PARENT-VARIABLES>.?pairs;
   :my %*VARIABLES;
-  '{%' ~ '%}' [ "for" <iterating=.declare-var>+ % ',' in <iterator=.variable> ]
-  <block>
-  <else=.for-else>?
-  '{%' ~ '%}' "endfor"
+  <njk-block(
+    "for",
+    /<iterating=.declare-var>+ % [<.ws> ',' <.ws>] in <.ws> <iterator=.variable>/,
+    /
+      <block>
+      <else=.for-else>?
+    /
+  )>
 }
 
 rule for-else {
-  '{%' ~ '%}' "else"
+  <njk-tag("else")>
   <block>
 }

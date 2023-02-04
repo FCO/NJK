@@ -1,20 +1,22 @@
 unit role NJK::Grammar::Variables;
 
 rule statement:sym<input> {
-  '{%' ~ '%}' [ "input" <declare-var> ]
+  <njk-tag("input", /<declare-var>/)>
   {
+    my $dcl = $<njk-tag><regex><declare-var>;
     require ::("NJK::Type");
-    %*VARIABLES{$<declare-var><var-name>.Str.trim} = ::("NJK::Type").new: ($<declare-var><type>.defined ?? $<declare-var><type> !! "any").Str;
-    %*INPUTS{$<declare-var><var-name>.Str.trim}    = ::("NJK::Type").new: ($<declare-var><type>.defined ?? $<declare-var><type> !! "any").Str;
+    %*VARIABLES{$dcl<var-name>.Str.trim} = ::("NJK::Type").new: ($dcl<type>.defined ?? $dcl<type> !! "any").Str;
+    %*INPUTS{$dcl<var-name>.Str.trim}    = ::("NJK::Type").new: ($dcl<type>.defined ?? $dcl<type> !! "any").Str;
   }
 }
 
 rule statement:sym<set> {
   :my $*LAST-TYPE;
-  '{%' ~ '%}' [ "set" <declare-var> "=" <logic> ]
+  <njk-tag("set", /<declare-var> <.ws> "=" <.ws> <logic>/)>
   {
+    my $dcl = $<njk-tag><regex><declare-var>;
     require ::("NJK::Type");
-    %*VARIABLES{$<declare-var><var-name>.Str.trim} = do with $<declare-var><type> -> $type {
+    %*VARIABLES{$dcl<var-name>.Str.trim} = do with $dcl<type> -> $type {
       ::("NJK::Type").new: $type
     } elsif $*LAST-TYPE {
       $*LAST-TYPE
@@ -25,9 +27,7 @@ rule statement:sym<set> {
 }
 
 rule statement:sym<set-block> {
-  '{%' ~ '%}' [ "set" <declare-var> ]
-  <part>*
-  '{%' ~ '%}' "endset"
+  <njk-block("set", /<declare-var>/, /<part>*/)>
 }
 
 token var-name {

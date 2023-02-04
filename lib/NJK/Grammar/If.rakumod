@@ -1,19 +1,23 @@
 unit role NJK::Grammar::If;
 
 rule statement:sym<if> {
-  '{%' ~ '%}' [ if <condition=.want("boolean|number")> ]
-  <block>
-  <elif=.if-elif>*
-  <else=.if-else>?
-  '{%' ~ '%}' "endif"
+  <njk-block(
+    "if",
+    /<condition=.want("boolean|number")>/,
+    /
+      <block>
+      <elif=.if-elif>*
+      <else=.if-else>?
+    /
+  )>
 }
 
 rule if-else {
-  '{%' ~ '%}' "else"
+  <njk-tag("else")>
   <block>
 }
 
 rule if-elif {
-  '{%' ~ '%}' [ "elif" <want> ]
+  <njk-tag("elif", /<want>/)>
   <block>
 }
