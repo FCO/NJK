@@ -6,6 +6,7 @@ use NJK::Grammar::Variables;
 use NJK::Grammar::Extends;
 use NJK::Grammar::Include;
 use NJK::Grammar::Macro;
+use NJK::Grammar::Import;
 use NJK::Grammar::Type;
 use X::NJK::ParsingError;
 
@@ -17,6 +18,7 @@ also does NJK::Grammar::Variables;
 also does NJK::Grammar::Extends;
 also does NJK::Grammar::Include;
 also does NJK::Grammar::Macro;
+also does NJK::Grammar::Import;
 also does NJK::Grammar::Type;
 
 require ::("NJK::Type");
@@ -47,8 +49,8 @@ rule njk-block(Str $name, &inside-tag = /<?>/, &block = /<block>/) {
 }
 
 token file(:$no-error) {
-  [
-    || <quoted-file> <?{ $<quoted-file><value>.Str.IO.e }>
+  <want("string")> [
+    || <?{ $<want>.made.value.IO.e }>
     || <?{ $no-error }>
     || <.error("File \o33[31m$<quoted-file><value>\o33[m does not exist")>
   ]

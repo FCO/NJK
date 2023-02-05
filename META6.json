@@ -54,6 +54,7 @@
     "NJK::Grammar::Extends": "lib/NJK/Grammar/Extends.rakumod",
     "NJK::Grammar::For": "lib/NJK/Grammar/For.rakumod",
     "NJK::Grammar::If": "lib/NJK/Grammar/If.rakumod",
+    "NJK::Grammar::Import": "lib/NJK/Grammar/Import.rakumod",
     "NJK::Grammar::Include": "lib/NJK/Grammar/Include.rakumod",
     "NJK::Grammar::Macro": "lib/NJK/Grammar/Macro.rakumod",
     "NJK::Grammar::Type": "lib/NJK/Grammar/Type.rakumod",

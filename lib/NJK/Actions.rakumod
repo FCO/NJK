@@ -58,7 +58,7 @@ method njk-block($/) {
 }
 
 method file($/) {
-  make $<quoted-file>.made
+  make $<want>.made.value
 }
 
 method quoted-file:sym<double>($/) { make ~$<value> }
