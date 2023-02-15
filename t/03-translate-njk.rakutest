@@ -1,0 +1,15 @@
+use Test;
+use NJK::AST;
+use NJK::AST::HTMLText;
+use NJK::Translate::NJK;
+
+my @oks =
+  NJK::AST::HTMLText.new(value => "bla") => "bla",
+;
+
+my NJK::Translate::NJK $t .= new;
+for @oks -> (NJK::AST :$key, Str :$value) {
+  is $t.translate($key), $value, "$key.gist() $value"
+}
+
+done-testing

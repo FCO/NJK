@@ -59,6 +59,7 @@
     "NJK::Grammar::Macro": "lib/NJK/Grammar/Macro.rakumod",
     "NJK::Grammar::Type": "lib/NJK/Grammar/Type.rakumod",
     "NJK::Grammar::Variables": "lib/NJK/Grammar/Variables.rakumod",
+    "NJK::Translate::NJK": "lib/NJK/Translate/NJK.rakumod",
     "NJK::Type": "lib/NJK/Type.rakumod",
     "X::NJK::ParsingError": "lib/X/NJK/ParsingError.rakumod"
   },
